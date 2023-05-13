@@ -1,5 +1,6 @@
 import datasource.report.ReportHandler;
 import model.MessageHandler;
+import presentation.LoginWindow;
 import presentation.UIHandler;
 
 public class Main {
@@ -7,7 +8,7 @@ public class Main {
         Thread thread = new Thread(MessageHandler.getSingleton());
         thread.start();
 
-        Thread thread2 = new Thread(UIHandler.getSingleton());
-        thread2.start();
+        UIHandler handler = UIHandler.getSingleton();
+
     }
 }

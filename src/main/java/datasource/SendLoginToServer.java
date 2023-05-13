@@ -14,6 +14,6 @@ public class SendLoginToServer implements ServerCommunication{
     @Override
     public void sendToServer() {
         System.out.println("Username: " + username + "\nPassword: " + password);
-        ReportHandler.getSingleton().addNewReport(new LoginStatusReport(true, "Login Successful!"));
+        ReportHandler.getSingleton().addNewReport(new LoginStatusReport(false, "Login Successful!"));
     }
 }

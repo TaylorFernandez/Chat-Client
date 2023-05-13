@@ -1,9 +1,10 @@
 package presentation;
 
-import datasource.report.ReportHandler;
 import model.Command.CommandSendLoginInformation;
 import model.MessageHandler;
-import model.StateHandler;
+import model.Observer.Observer;
+import model.State.LoginWaitingState;
+import model.State.MenuInitState;
 
 import javax.swing.*;
 import java.awt.*;
@@ -71,7 +72,7 @@ public class LoginWindow {
 
             CommandSendLoginInformation info = new CommandSendLoginInformation(usernameText, passwordText);
             MessageHandler.getSingleton().queueCommand(info);
-            StateHandler.getSingleton().setLoginLoadingState();
+            Observer.getSingleton().setState(new LoginWaitingState());
         }
     }
 }
