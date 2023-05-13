@@ -1,5 +1,6 @@
-package presentation.login;
+package presentation;
 
+import datasource.report.ReportHandler;
 import model.Command.CommandSendLoginInformation;
 import model.MessageHandler;
 import model.StateHandler;
@@ -23,7 +24,7 @@ public class LoginWindow {
         int windowX = (screenSize.width - screenWidth) / 2;
         int windowY = (screenSize.height - screenHeight) / 2;
 
-        frame = new JFrame("Chat Client");
+        frame = new JFrame("Login");
         frame.setSize(screenWidth, screenHeight);
         frame.setLocation(windowX, windowY);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -57,12 +58,19 @@ public class LoginWindow {
         frame.setVisible(bool);
     }
 
+    public static void showFailurePopup(){
+        int choice = JOptionPane.showConfirmDialog(null ,
+                "Login Failed. Please try again!", "Login failed",
+                JOptionPane.DEFAULT_OPTION);
+    }
+
     public void doAction(ActionEvent e) {
         if (e.getActionCommand().equals("Login")) {
             String usernameText = Username.getText();
             String passwordText = Password.getText();
 
             CommandSendLoginInformation info = new CommandSendLoginInformation(usernameText, passwordText);
+            MessageHandler.getSingleton().queueCommand(info);
             StateHandler.getSingleton().setLoginLoadingState();
         }
     }

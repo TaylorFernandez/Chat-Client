@@ -1,11 +1,10 @@
 package datasource.report;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class ReportHandler {
+public class ReportHandler{
 
-    private final List<Report> reportList = new ArrayList<>();
+    private final ConcurrentLinkedQueue<Report> reportQueue = new ConcurrentLinkedQueue<>();
 
     private static ReportHandler singleton;
 
@@ -21,15 +20,15 @@ public class ReportHandler {
     }
 
     public void addNewReport(Report r) {
-        synchronized (reportList) {
-            reportList.add(r);
-        }
+        reportQueue.add(r);
         System.out.println(r.toString());
     }
 
-    public List<Report> getAllReports() {
-        synchronized (reportList) {
-            return new ArrayList<>(reportList); // Return a copy of the list to prevent modification of the original list
-        }
+    public Report getNextReport() {
+        return reportQueue.poll();
+    }
+
+    public boolean hasReports() {
+        return !reportQueue.isEmpty();
     }
 }

@@ -1,18 +1,21 @@
 package presentation;
 
+import datasource.report.ReportHandler;
 import model.State.LoginInitialState;
 import model.State.LoginWaitingState;
+import model.State.MenuInitState;
 import model.StateHandler;
-import presentation.login.LoginWindow;
 
 public class UIHandler implements Runnable{
 
     private static UIHandler singleton;
 
-    private final LoginWindow window;
+    private final LoginWindow loginWindow;
+    private final MainMenuWindow mainMenu;
 
     private UIHandler(){
-        window = new LoginWindow();
+        loginWindow = new LoginWindow();
+        mainMenu = new MainMenuWindow();
     }
 
     public static synchronized UIHandler getSingleton(){
@@ -26,11 +29,22 @@ public class UIHandler implements Runnable{
     public void run() {
         while(true) {
             if (StateHandler.getSingleton().getCurrentState().getClass() == LoginInitialState.class) {
-                window.isVisible(true);
+                loginWindow.isVisible(true);
             }
 
             if(StateHandler.getSingleton().getCurrentState().getClass() == LoginWaitingState.class){
-                window.isVisible(false);
+                loginWindow.isVisible(false);
+                if(ReportHandler.getSingleton().getNextReport().getSuccess()){
+                    System.out.println("Successful");
+                    StateHandler.getSingleton().setMainMenuInitState();
+                }else{
+                    LoginWindow.showFailurePopup();
+                    StateHandler.getSingleton().setLoginInitializedState();
+                }
+            }
+
+            if(StateHandler.getSingleton().getCurrentState().getClass() == MenuInitState.class){
+                mainMenu.isVisible(true);
             }
         }
     }

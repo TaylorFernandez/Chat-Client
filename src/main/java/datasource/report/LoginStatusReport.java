@@ -10,7 +10,7 @@ public class LoginStatusReport implements Report {
     }
 
     public String toString(){
-        return "Login Status Report: " + success + "Description: " + description;
+        return "Login Status Report: " + success + " Description: " + description;
     }
 
     public boolean getSuccess(){

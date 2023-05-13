@@ -2,6 +2,7 @@ package model;
 
 import model.State.LoginInitialState;
 import model.State.LoginWaitingState;
+import model.State.MenuInitState;
 import model.State.State;
 
 public class StateHandler{
@@ -11,9 +12,12 @@ public class StateHandler{
 
     private final State loginInitializedState;
     private final State loginLoadingState;
+
+    private final State mainMenuInitState;
     private StateHandler(){
         loginInitializedState = new LoginInitialState();
         loginLoadingState = new LoginWaitingState();
+        mainMenuInitState = new MenuInitState();
         this.currentState = loginInitializedState;
 
     }
@@ -32,6 +36,10 @@ public class StateHandler{
 
     public void setLoginInitializedState(){
         currentState = loginInitializedState;
+    }
+
+    public void setMainMenuInitState(){
+        currentState = mainMenuInitState;
     }
 
     public State getCurrentState(){

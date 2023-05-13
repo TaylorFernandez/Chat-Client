@@ -33,7 +33,7 @@ public class MessageHandler implements Runnable {
         synchronized (commandQueue) {
             if (!commandQueue.isEmpty()) {
                 Command c = commandQueue.remove(0);
-                ReportHandler.getSingleton().addNewReport(c.execute());
+                c.execute();
             }
         }
     }

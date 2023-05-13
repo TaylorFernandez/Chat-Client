@@ -8,14 +8,13 @@ public class CommandSendLoginInformation implements Command{
     private final String password;
 
     public CommandSendLoginInformation(String username, String password) {
-
         this.username = username;
         this.password = password;
     }
 
     @Override
-    public Report execute() {
+    public void execute() {
         SendLoginToServer serverCommunications = new SendLoginToServer(username, password);
-        return serverCommunications.sendToServer();
+        serverCommunications.sendToServer();
     }
 }
