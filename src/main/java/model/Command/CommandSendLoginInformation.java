@@ -1,6 +1,7 @@
 package model.Command;
 
 import datasource.SendLoginToServer;
+import datasource.report.Report;
 
 public class CommandSendLoginInformation implements Command{
     private final String username;
@@ -11,10 +12,10 @@ public class CommandSendLoginInformation implements Command{
         this.username = username;
         this.password = password;
     }
+
     @Override
-    public void execute() {
-        System.out.println("Executed Command");
+    public Report execute() {
         SendLoginToServer serverCommunications = new SendLoginToServer(username, password);
-        serverCommunications.sendToServer();
+        return serverCommunications.sendToServer();
     }
 }

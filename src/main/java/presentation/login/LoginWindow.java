@@ -1,7 +1,8 @@
-package presentation;
+package presentation.login;
 
 import model.Command.CommandSendLoginInformation;
 import model.MessageHandler;
+import model.StateHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,6 +11,7 @@ import java.awt.event.ActionListener;
 
 public class LoginWindow {
     JTextField Username;
+    JFrame frame;
     JTextField Password;
 
     public LoginWindow() {
@@ -21,7 +23,7 @@ public class LoginWindow {
         int windowX = (screenSize.width - screenWidth) / 2;
         int windowY = (screenSize.height - screenHeight) / 2;
 
-        JFrame frame = new JFrame("Chat Client");
+        frame = new JFrame("Chat Client");
         frame.setSize(screenWidth, screenHeight);
         frame.setLocation(windowX, windowY);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -51,14 +53,17 @@ public class LoginWindow {
         frame.setVisible(true);
     }
 
+    public void isVisible(boolean bool){
+        frame.setVisible(bool);
+    }
+
     public void doAction(ActionEvent e) {
         if (e.getActionCommand().equals("Login")) {
             String usernameText = Username.getText();
             String passwordText = Password.getText();
 
             CommandSendLoginInformation info = new CommandSendLoginInformation(usernameText, passwordText);
-            System.out.println("Bruh: " + MessageHandler.getSingleton().toString());
-            MessageHandler.getSingleton().QueueCommand(info);
+            StateHandler.getSingleton().setLoginLoadingState();
         }
     }
 }
