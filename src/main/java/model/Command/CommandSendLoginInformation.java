@@ -3,6 +3,8 @@ package model.Command;
 import datasource.SendLoginToServer;
 import datasource.report.Report;
 
+import java.io.IOException;
+
 public class CommandSendLoginInformation implements Command{
     private final String username;
     private final String password;
@@ -13,7 +15,7 @@ public class CommandSendLoginInformation implements Command{
     }
 
     @Override
-    public void execute() {
+    public void execute() throws IOException {
         SendLoginToServer serverCommunications = new SendLoginToServer(username, password);
         serverCommunications.sendToServer();
     }

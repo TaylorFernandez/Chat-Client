@@ -1,3 +1,4 @@
+import datasource.ExternalCommunicationManager;
 import datasource.report.ReportHandler;
 import model.MessageHandler;
 import presentation.LoginWindow;
@@ -8,6 +9,7 @@ public class Main {
         Thread thread = new Thread(MessageHandler.getSingleton());
         thread.start();
 
+        ExternalCommunicationManager.getSingleton();
         UIHandler handler = UIHandler.getSingleton();
 
     }

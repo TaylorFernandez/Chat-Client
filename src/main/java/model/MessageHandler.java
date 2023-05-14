@@ -3,6 +3,7 @@ package model;
 import datasource.report.ReportHandler;
 import model.Command.Command;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class MessageHandler implements Runnable {
         }
     }
 
-    public void executeNextCommand() {
+    public void executeNextCommand() throws IOException {
         synchronized (commandQueue) {
             if (!commandQueue.isEmpty()) {
                 Command c = commandQueue.remove(0);
@@ -49,7 +50,11 @@ public class MessageHandler implements Runnable {
                         e.printStackTrace();
                     }
                 }
-                executeNextCommand();
+                try {
+                    executeNextCommand();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
