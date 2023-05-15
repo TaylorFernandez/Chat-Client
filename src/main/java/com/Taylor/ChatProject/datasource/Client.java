@@ -6,16 +6,16 @@ import com.Taylor.ChatProject.datasource.presentation.UIHandler;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Application {
+public class Client {
     public static void main(String[] args) {
-        Application application = new Application();
+        Client application = new Client();
         application.start();
 
         Thread thread = new Thread(MessageHandler.getSingleton());
         thread.start();
 
-        ExternalCommunicationManager.getSingleton();
         UIHandler handler = UIHandler.getSingleton();
+        ClientInformation.getSingleton();
     }
 
     public void start() {

@@ -1,4 +1,4 @@
-package com.Taylor.ChatProject.datasource.report;
+package com.Taylor.ChatProject.datasource.model.report;
 
 public interface Report {
     public String toString();

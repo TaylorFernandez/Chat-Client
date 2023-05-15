@@ -1,6 +1,6 @@
 package com.Taylor.ChatProject.datasource.presentation;
 
-import com.Taylor.ChatProject.datasource.report.ReportHandler;
+import com.Taylor.ChatProject.datasource.model.report.ReportHandler;
 import com.Taylor.ChatProject.datasource.model.Observer.Observable;
 import com.Taylor.ChatProject.datasource.model.Observer.Observer;
 import com.Taylor.ChatProject.datasource.model.State.LoginInitialState;
@@ -38,6 +38,9 @@ public class UIHandler extends Observable{
 
         if(Observer.getSingleton().getState().getClass() == LoginWaitingState.class){
             loginWindow.isVisible(false);
+
+            while(!ReportHandler.getSingleton().hasReports()){}
+
             if(ReportHandler.getSingleton().getNextReport().getSuccess()){
                 System.out.println("Successful");
                 Observer.getSingleton().setState(new MenuInitState());

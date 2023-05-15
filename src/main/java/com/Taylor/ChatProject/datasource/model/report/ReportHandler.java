@@ -1,4 +1,4 @@
-package com.Taylor.ChatProject.datasource.report;
+package com.Taylor.ChatProject.datasource.model.report;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -21,7 +21,7 @@ public class ReportHandler{
 
     public void addNewReport(Report r) {
         reportQueue.add(r);
-        System.out.println(r.toString());
+        System.out.println("Report: " + r.toString());
     }
 
     public Report getNextReport() {

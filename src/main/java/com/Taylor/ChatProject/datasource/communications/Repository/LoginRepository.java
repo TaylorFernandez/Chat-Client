@@ -37,6 +37,7 @@ public class LoginRepository {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<Object> entity = new HttpEntity<>(request, headers);
+        System.out.println("entity.toString(): " + entity.toString());
         return restTemplate.postForObject(url, entity, responseType);
     }
 

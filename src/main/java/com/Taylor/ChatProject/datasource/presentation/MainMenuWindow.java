@@ -17,8 +17,8 @@ public class MainMenuWindow {
 
     public MainMenuWindow() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int screenWidth = screenSize.width / 5;
-        int screenHeight = screenSize.height / 6;
+        int screenWidth = screenSize.width / 4;
+        int screenHeight = screenSize.height / 3;
 
         // Calculate the x and y coordinates to center the window
         int windowX = (screenSize.width - screenWidth) / 2;
@@ -28,18 +28,12 @@ public class MainMenuWindow {
         frame.setSize(screenWidth, screenHeight);
         frame.setLocation(windowX, windowY);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
+//        frame.setResizable(false);
 
-        JPanel mainMenu = new JPanel(new BorderLayout()); // Panel for centering the button
-        JPanel buttonPanel = new JPanel(new GridLayout(3,1));
+        JPanel mainMenu = new JPanel();
+        mainMenu.setLayout(new BoxLayout(mainMenu, BoxLayout.Y_AXIS));
 
-        JButton startNetworking = new JButton("Start Networking");
-        startNetworking.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                doAction(e);
-            }
-        });
-        buttonPanel.add(startNetworking);
+        JPanel buttonPanel = new JPanel(new GridLayout(3, 1));
 
         JButton newChat = new JButton("New Chat");
         newChat.addActionListener(new ActionListener() {
@@ -73,27 +67,27 @@ public class MainMenuWindow {
             }
         });
 
+        // Set the preferred size of the listScrollPane to modify the height of the JList
         listScrollPane.setPreferredSize(new Dimension(100, 500));
 
-        mainMenu.add(listScrollPane, BorderLayout.WEST);
-        mainMenu.add(buttonPanel, BorderLayout.EAST);
+        mainMenu.add(listScrollPane);
+        mainMenu.add(buttonPanel);
 
-
-        frame.add(mainMenu); // Add the button panel to the frame
+        frame.add(mainMenu);
 
         frame.setVisible(false);
     }
 
-    public void isVisible(boolean bool){
+    public void isVisible(boolean bool) {
         frame.setVisible(bool);
     }
 
     public void doAction(ActionEvent e) {
         if (e.getActionCommand().equals("Start Networking")) {
 
-        }else if(e.getActionCommand().equals("New Chat")){
+        } else if (e.getActionCommand().equals("New Chat")) {
 
-        }else if(e.getActionCommand().equals("Settings")){
+        } else if (e.getActionCommand().equals("Settings")) {
 
         }
     }
