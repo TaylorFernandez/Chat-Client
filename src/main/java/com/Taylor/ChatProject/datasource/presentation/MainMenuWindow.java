@@ -1,11 +1,21 @@
 package com.Taylor.ChatProject.datasource.presentation;
 
+import com.Taylor.ChatProject.datasource.ClientInformation;
+import com.Taylor.ChatProject.datasource.model.Command.Command;
+import com.Taylor.ChatProject.datasource.model.Command.CommandGetChatForUsers;
+import com.Taylor.ChatProject.datasource.model.Command.CommandGetPeers;
+import com.Taylor.ChatProject.datasource.model.MessageHandler;
+import com.Taylor.ChatProject.datasource.model.report.GetPeersReport;
+import com.Taylor.ChatProject.datasource.model.report.ReportHandler;
+import org.apache.logging.log4j.message.Message;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class MainMenuWindow {
 
@@ -50,9 +60,19 @@ public class MainMenuWindow {
             }
         });
         buttonPanel.add(settings);
+        CommandGetPeers peers = new CommandGetPeers();
+        MessageHandler.getSingleton().queueCommand(peers);
+        while(!ReportHandler.getSingleton().hasReports()){}
+        GetPeersReport report = (GetPeersReport) ReportHandler.getSingleton().getNextReport();
+        System.out.println("MainMenuReport: " + report.toString());
+        List<String> peersList = report.getPeers();
 
-        String[] listData = {"User 1", "User 2", "User 3", "User 4"};
-        list = new JList<>(listData);
+        String[] pList = new String[peersList.size()];
+        for(int i = 0; i < pList.length; i++){
+            pList[i] = peersList.get(i);
+        }
+        System.out.println("Filled Peers");
+        list = new JList<>(pList);
         JScrollPane listScrollPane = new JScrollPane(list);
         list.addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -61,7 +81,7 @@ public class MainMenuWindow {
                     // Get the selected item from the list
                     String selected = list.getSelectedValue();
                     if (selected != null) {
-                        System.out.println("Clicked: " + selected);
+                        getChats(selected);
                     }
                 }
             }
@@ -80,6 +100,14 @@ public class MainMenuWindow {
 
     public void isVisible(boolean bool) {
         frame.setVisible(bool);
+    }
+
+    private void getChats(String chatPeer){
+        CommandGetChatForUsers command = new CommandGetChatForUsers(ClientInformation.getSingleton().getUsername(), chatPeer);
+        MessageHandler.getSingleton().queueCommand(command);
+        while(!ReportHandler.getSingleton().hasReports()){}
+        ChattingMenu menu = new ChattingMenu();
+
     }
 
     public void doAction(ActionEvent e) {

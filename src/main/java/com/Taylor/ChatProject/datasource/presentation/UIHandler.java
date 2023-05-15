@@ -12,11 +12,10 @@ public class UIHandler extends Observable{
     private static UIHandler singleton;
 
     private final LoginWindow loginWindow;
-    private final MainMenuWindow mainMenu;
+    private MainMenuWindow mainMenu;
 
     private UIHandler(){
         loginWindow = new LoginWindow();
-        mainMenu = new MainMenuWindow();
         Observer.getSingleton().addObserver(this);
         System.out.println(Observer.getSingleton().getNumObservers());
     }
@@ -51,6 +50,7 @@ public class UIHandler extends Observable{
         }
 
         if(Observer.getSingleton().getState().getClass() == MenuInitState.class){
+            mainMenu = new MainMenuWindow();
             mainMenu.isVisible(true);
         }
     }

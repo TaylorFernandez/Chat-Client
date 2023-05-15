@@ -24,8 +24,12 @@ public class ReportHandler{
         System.out.println("Report: " + r.toString());
     }
 
-    public Report getNextReport() {
-        return reportQueue.poll();
+    public Report getNextReport()
+    {
+        Report r = reportQueue.poll();
+        assert r != null;
+        System.out.println("Getting next Report: " + r.toString());
+        return r;
     }
 
     public boolean hasReports() {

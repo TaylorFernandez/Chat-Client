@@ -1,7 +1,10 @@
 package com.Taylor.ChatProject.datasource.communications.Repository;
 
-import com.Taylor.ChatProject.datasource.communications.Request.RequestGetLoginStatus;
-import com.Taylor.ChatProject.datasource.communications.Response.BasicResponse;
+import com.Taylor.ChatProject.datasource.communications.Request.RequestGetChats;
+import com.Taylor.ChatProject.datasource.communications.Request.RequestGetPeers;
+import com.Taylor.ChatProject.datasource.communications.Response.ResponseGetChats;
+import com.Taylor.ChatProject.datasource.communications.Response.ResponseGetPeers;
+import com.Taylor.ChatProject.datasource.model.report.ChatForUsersReport;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -15,34 +18,40 @@ import org.springframework.web.client.RestTemplate;
 import java.time.Duration;
 
 @Repository
-public class LoginRepository {
-    private static LoginRepository singleton;
+public class ChatRepository {
+    private static ChatRepository singleton;
+
     private final RestTemplate restTemplate;
+
     private final String baseUrl;
 
     private final RestTemplateBuilder restTemplateBuilder;
 
     @Autowired
-    private LoginRepository(){
+    private ChatRepository(){
         restTemplateBuilder = new RestTemplateBuilder()
                 .setConnectTimeout(Duration.ofSeconds(10))
                 .setReadTimeout(Duration.ofSeconds(10));
         this.restTemplate = restTemplateBuilder.build();
         this.baseUrl = "http://localhost:8080/";
-
     }
 
-    public static LoginRepository getSingleton(){
+    public static ChatRepository getSingleton(){
         if(singleton != null){
             return singleton;
         }
-        singleton = new LoginRepository();
+        singleton = new ChatRepository();
         return singleton;
     }
 
-    public BasicResponse validateLoginInformation(RequestGetLoginStatus request){
-        String url = baseUrl + "/login";
-        return performPostRequest(url, request, BasicResponse.class);
+    public ResponseGetChats getChatsForUsers(RequestGetChats request){
+        String url = baseUrl + "/chat/getChatForUsers";
+        return performPostRequest(url, request, ResponseGetChats.class);
+    }
+
+    public ResponseGetPeers getPeers(RequestGetPeers request){
+        String url = baseUrl + "/chat/getPeers";
+        return performPostRequest(url, request, ResponseGetPeers.class);
     }
 
     private <T> T performPostRequest(String url, Object request, Class<T> responseType) {

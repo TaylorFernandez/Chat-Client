@@ -20,9 +20,7 @@ public class CommandSendLoginInformation implements Command{
     public CommandSendLoginInformation(String username, String password) {
         this.username = username;
         this.password = password;
-        this.repository = new LoginRepository(new RestTemplateBuilder()
-                .setConnectTimeout(Duration.ofSeconds(10))
-                .setReadTimeout(Duration.ofSeconds(10)));
+        this.repository = LoginRepository.getSingleton();
     }
 
     @Override

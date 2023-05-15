@@ -1,5 +1,10 @@
 package com.Taylor.ChatProject.datasource.communications.Datatypes;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.List;
 
 public class ChatThread {
@@ -8,7 +13,10 @@ public class ChatThread {
 
     private final List<ChatMessage> chats;
 
-    public ChatThread(String username1, String username2, List<ChatMessage> chats){
+    @JsonCreator
+    public ChatThread(@JsonProperty("username1") String username1,
+                      @JsonProperty("username2") String username2,
+                      @JsonProperty("chats") List<ChatMessage> chats){
         this.username1 = username1;
         this.username2 = username2;
         this.chats = chats;
@@ -24,5 +32,9 @@ public class ChatThread {
 
     public List<ChatMessage> getChats(){
         return chats;
+    }
+
+    public static String getJson(ChatThread thread) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(thread);
     }
 }
