@@ -6,21 +6,21 @@ import java.util.List;
 import com.Taylor.ChatProject.datasource.model.State.LoginInitialState;
 import com.Taylor.ChatProject.datasource.model.State.State;
 
-public class Observer {
-    private static Observer observer;
+public class ApplicationStateObserver{
+    private static ApplicationStateObserver observer;
 
     private final List<Observable> observers = new ArrayList<Observable>();
     private State state;
 
-    private Observer(){
+    private ApplicationStateObserver(){
         this.state = new LoginInitialState();
     }
 
-    public static Observer getSingleton(){
+    public static ApplicationStateObserver getSingleton(){
         if(observer != null){
             return observer;
         }
-        observer = new Observer();
+        observer = new ApplicationStateObserver();
         return observer;
     }
 
@@ -41,7 +41,7 @@ public class Observer {
         observers.add(obs);
     }
 
-    private void notifyAllObservers(){
+    public void notifyAllObservers(){
         for(Observable obs : observers){
             obs.update();
         }

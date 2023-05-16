@@ -2,7 +2,7 @@ package com.Taylor.ChatProject.datasource.presentation;
 
 import com.Taylor.ChatProject.datasource.model.Command.CommandSendLoginInformation;
 import com.Taylor.ChatProject.datasource.model.MessageHandler;
-import com.Taylor.ChatProject.datasource.model.Observer.Observer;
+import com.Taylor.ChatProject.datasource.model.Observer.ApplicationStateObserver;
 import com.Taylor.ChatProject.datasource.model.State.LoginWaitingState;
 
 import javax.swing.*;
@@ -68,10 +68,10 @@ public class LoginWindow {
         if (e.getActionCommand().equals("Login")) {
             String usernameText = Username.getText();
             String passwordText = Password.getText();
-
+            System.out.println("Logging in");
             CommandSendLoginInformation info = new CommandSendLoginInformation(usernameText, passwordText);
             MessageHandler.getSingleton().queueCommand(info);
-            Observer.getSingleton().setState(new LoginWaitingState());
+            ApplicationStateObserver.getSingleton().setState(new LoginWaitingState());
         }
     }
 }

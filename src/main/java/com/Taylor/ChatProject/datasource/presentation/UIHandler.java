@@ -1,13 +1,13 @@
 package com.Taylor.ChatProject.datasource.presentation;
 
-import com.Taylor.ChatProject.datasource.model.report.ReportHandler;
 import com.Taylor.ChatProject.datasource.model.Observer.Observable;
-import com.Taylor.ChatProject.datasource.model.Observer.Observer;
+import com.Taylor.ChatProject.datasource.model.report.ReportHandler;
+import com.Taylor.ChatProject.datasource.model.Observer.ApplicationStateObserver;
 import com.Taylor.ChatProject.datasource.model.State.LoginInitialState;
 import com.Taylor.ChatProject.datasource.model.State.LoginWaitingState;
 import com.Taylor.ChatProject.datasource.model.State.MenuInitState;
 
-public class UIHandler extends Observable{
+public class UIHandler extends Observable {
 
     private static UIHandler singleton;
 
@@ -16,8 +16,8 @@ public class UIHandler extends Observable{
 
     private UIHandler(){
         loginWindow = new LoginWindow();
-        Observer.getSingleton().addObserver(this);
-        System.out.println(Observer.getSingleton().getNumObservers());
+
+        ApplicationStateObserver.getSingleton().addObserver(this);
     }
 
     public static synchronized UIHandler getSingleton(){
@@ -31,25 +31,28 @@ public class UIHandler extends Observable{
 
     @Override
     public void update() {
-        if (Observer.getSingleton().getState().getClass() == LoginInitialState.class) {
+        if (ApplicationStateObserver.getSingleton().getState().getClass() == LoginInitialState.class) {
             loginWindow.isVisible(true);
         }
 
-        if(Observer.getSingleton().getState().getClass() == LoginWaitingState.class){
+        if(ApplicationStateObserver.getSingleton().getState().getClass() == LoginWaitingState.class){
             loginWindow.isVisible(false);
 
             while(!ReportHandler.getSingleton().hasReports()){}
+            System.out.println("LoginWaitingState");
 
             if(ReportHandler.getSingleton().getNextReport().getSuccess()){
-                System.out.println("Successful");
-                Observer.getSingleton().setState(new MenuInitState());
+                System.out.println("\n\nSuccessful\n\n");
+
+                ApplicationStateObserver.getSingleton().setState(new MenuInitState());
             }else{
                 LoginWindow.showFailurePopup();
-                Observer.getSingleton().setState(new LoginInitialState());
+                ApplicationStateObserver.getSingleton().setState(new LoginInitialState());
             }
         }
 
-        if(Observer.getSingleton().getState().getClass() == MenuInitState.class){
+        if(ApplicationStateObserver.getSingleton().getState().getClass() == MenuInitState.class){
+            System.out.println("\n\nMenuInitState\n\n");
             mainMenu = new MainMenuWindow();
             mainMenu.isVisible(true);
         }

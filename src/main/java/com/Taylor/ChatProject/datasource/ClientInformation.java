@@ -5,6 +5,8 @@ public class ClientInformation {
 
     private String username;
 
+    private String latestRecipient;
+
     private ClientInformation(){}
 
     public static ClientInformation getSingleton(){
@@ -21,5 +23,13 @@ public class ClientInformation {
 
     public void setUsername(String username){
         this.username = username;
+    }
+
+    public void setLatestRecipient(String recipient){
+        this.latestRecipient = recipient;
+    }
+
+    public String getLatestRecipient(){
+        return latestRecipient;
     }
 }
