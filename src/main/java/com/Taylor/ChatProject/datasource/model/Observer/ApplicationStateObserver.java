@@ -9,7 +9,7 @@ import com.Taylor.ChatProject.datasource.model.State.State;
 public class ApplicationStateObserver{
     private static ApplicationStateObserver observer;
 
-    private final List<Observable> observers = new ArrayList<Observable>();
+    private final List<Observer> observers = new ArrayList<Observer>();
     private State state;
 
     private ApplicationStateObserver(){
@@ -37,12 +37,12 @@ public class ApplicationStateObserver{
         return state;
     }
 
-    public void addObserver(Observable obs){
+    public void addObserver(Observer obs){
         observers.add(obs);
     }
 
     public void notifyAllObservers(){
-        for(Observable obs : observers){
+        for(Observer obs : observers){
             obs.update();
         }
     }

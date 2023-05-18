@@ -1,7 +1,4 @@
 package com.Taylor.ChatProject.datasource.communications.Request;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class RequestGetChats implements Request{
     private final String username1;
     private final String username2;

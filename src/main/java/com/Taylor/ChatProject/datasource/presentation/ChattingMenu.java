@@ -3,12 +3,13 @@ import com.Taylor.ChatProject.datasource.ClientInformation;
 import com.Taylor.ChatProject.datasource.communications.Datatypes.ChatMessage;
 import com.Taylor.ChatProject.datasource.communications.Datatypes.ChatThread;
 import com.Taylor.ChatProject.datasource.model.Command.CommandGetChatForUsers;
+import com.Taylor.ChatProject.datasource.model.Command.CommandSendNewChat;
 import com.Taylor.ChatProject.datasource.model.MessageHandler;
 import com.Taylor.ChatProject.datasource.model.Observer.MessageStateObserver;
-import com.Taylor.ChatProject.datasource.model.Observer.Observable;
+import com.Taylor.ChatProject.datasource.model.Observer.Observer;
+import com.Taylor.ChatProject.datasource.model.Observer.TimerObserver;
 import com.Taylor.ChatProject.datasource.model.Observer.UpdateMessageTimer;
 import com.Taylor.ChatProject.datasource.model.report.ChatForUsersReport;
-import com.Taylor.ChatProject.datasource.model.report.Report;
 import com.Taylor.ChatProject.datasource.model.report.ReportHandler;
 
 import javax.swing.*;
@@ -19,7 +20,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
 
-public class ChattingMenu extends Observable {
+public class ChattingMenu extends TimerObserver {
     private JFrame frame;
     private JTextArea chatArea;
     private JTextField inputField;
@@ -27,7 +28,6 @@ public class ChattingMenu extends Observable {
 
     private UpdateMessageTimer timer;
 
-    private String recipient;
 
     public ChattingMenu() {
         timer = new UpdateMessageTimer();
@@ -86,6 +86,10 @@ public class ChattingMenu extends Observable {
         ChatMessage msg = new ChatMessage(ClientInformation.getSingleton().getUsername(), message);
         appendToChatArea(msg);
         inputField.setText("");
+        CommandSendNewChat cmd = new CommandSendNewChat(ClientInformation.getSingleton().getUsername(),
+                                                        ClientInformation.getSingleton().getLatestRecipient(),
+                                                        message);
+        MessageHandler.getSingleton().queueCommand(cmd);
     }
 
     public void fillChatArea(ChatThread thread){
@@ -107,18 +111,23 @@ public class ChattingMenu extends Observable {
 
     @Override
     public void update() {
+        chatArea.setText(null);
         System.out.println("fetching new messages");
         CommandGetChatForUsers cmd = new CommandGetChatForUsers(ClientInformation.getSingleton().getUsername(),
                 ClientInformation.getSingleton().getLatestRecipient());
-        System.out.println("Me: " + ClientInformation.getSingleton().getUsername() + "Other: " + ClientInformation.getSingleton().getLatestRecipient());
+
+        System.out.println("Me: " + ClientInformation.getSingleton().getUsername() + " Other: " + ClientInformation.getSingleton().getLatestRecipient());
         MessageHandler.getSingleton().queueCommand(cmd);
         while(!ReportHandler.getSingleton().hasReports()){}
         ChatForUsersReport report = (ChatForUsersReport) ReportHandler.getSingleton().getNextReport();
-        System.out.println(report);
-        refillChatArea(report.getChats());
+        if(report.getChats() != null) {
+            System.out.println(report);
+            refillChatArea(report.getChats());
+        }
     }
 
     private void onClose(){
         timer.stopExecution();
+        ClientInformation.getSingleton().setLatestRecipient(null);
     }
 }

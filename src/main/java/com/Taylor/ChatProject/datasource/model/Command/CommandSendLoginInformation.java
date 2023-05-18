@@ -31,8 +31,7 @@ public class CommandSendLoginInformation implements Command{
         if(response.getSuccess()){
             ClientInformation.getSingleton().setUsername(username);
         }
-
+        System.out.println("Bruh sending login report");
         ReportHandler.getSingleton().addNewReport(new LoginStatusReport(response.getSuccess(), response.getDescription()));
-        System.out.println("Response from Server: " + response.getClass());
     }
 }

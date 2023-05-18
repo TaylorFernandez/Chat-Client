@@ -1,13 +1,13 @@
 package com.Taylor.ChatProject.datasource.presentation;
 
-import com.Taylor.ChatProject.datasource.model.Observer.Observable;
+import com.Taylor.ChatProject.datasource.model.Observer.Observer;
 import com.Taylor.ChatProject.datasource.model.report.ReportHandler;
 import com.Taylor.ChatProject.datasource.model.Observer.ApplicationStateObserver;
 import com.Taylor.ChatProject.datasource.model.State.LoginInitialState;
 import com.Taylor.ChatProject.datasource.model.State.LoginWaitingState;
 import com.Taylor.ChatProject.datasource.model.State.MenuInitState;
 
-public class UIHandler extends Observable {
+public class UIHandler extends Observer {
 
     private static UIHandler singleton;
 
@@ -39,11 +39,8 @@ public class UIHandler extends Observable {
             loginWindow.isVisible(false);
 
             while(!ReportHandler.getSingleton().hasReports()){}
-            System.out.println("LoginWaitingState");
 
             if(ReportHandler.getSingleton().getNextReport().getSuccess()){
-                System.out.println("\n\nSuccessful\n\n");
-
                 ApplicationStateObserver.getSingleton().setState(new MenuInitState());
             }else{
                 LoginWindow.showFailurePopup();
@@ -52,8 +49,7 @@ public class UIHandler extends Observable {
         }
 
         if(ApplicationStateObserver.getSingleton().getState().getClass() == MenuInitState.class){
-            System.out.println("\n\nMenuInitState\n\n");
-            mainMenu = new MainMenuWindow();
+            mainMenu = MainMenuWindow.getSingleton();
             mainMenu.isVisible(true);
         }
     }

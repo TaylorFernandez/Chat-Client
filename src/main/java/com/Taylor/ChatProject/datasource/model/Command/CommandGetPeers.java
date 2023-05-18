@@ -17,11 +17,9 @@ public class CommandGetPeers implements Command{
 
     @Override
     public void execute() throws IOException {
-        System.out.println("Getting Peers!");
         ResponseGetPeers response = repository.getPeers(new RequestGetPeers());
         ReportHandler.getSingleton().addNewReport(new GetPeersReport(response.getSuccess(),
                                                                     response.getDescription(),
                                                                     response.getPeers()));
-        System.out.println("Got Peers!");
     }
 }

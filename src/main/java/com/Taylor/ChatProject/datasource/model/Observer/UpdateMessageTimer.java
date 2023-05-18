@@ -8,7 +8,7 @@ public class UpdateMessageTimer{
 
     public void startExecution(){
         timer = new Timer();
-        timer.schedule(new updateMessage(), 100, 500);
+        timer.schedule(new updateMessage(), 500, 2000);
     }
 
     public void stopExecution(){
@@ -21,6 +21,7 @@ public class UpdateMessageTimer{
     private static class updateMessage extends TimerTask {
         @Override
         public void run() {
+            System.out.println("requesting!");
             MessageStateObserver.getSingleton().notifyAllObservers();
         }
     }

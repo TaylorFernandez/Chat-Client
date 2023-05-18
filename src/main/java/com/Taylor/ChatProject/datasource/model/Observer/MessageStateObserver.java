@@ -1,8 +1,5 @@
 package com.Taylor.ChatProject.datasource.model.Observer;
 
-import com.Taylor.ChatProject.datasource.model.State.LoginInitialState;
-import com.Taylor.ChatProject.datasource.model.State.State;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +7,7 @@ public class MessageStateObserver{
 
     private static MessageStateObserver observer;
 
-    private final List<Observable> observers = new ArrayList<Observable>();
+    private final List<TimerObserver> observers = new ArrayList<TimerObserver>();
 
     public static MessageStateObserver getSingleton(){
         if(observer != null){
@@ -25,12 +22,13 @@ public class MessageStateObserver{
     }
 
 
-    public void addObserver(Observable obs){
+    public void addObserver(TimerObserver obs){
         observers.add(obs);
     }
 
     public void notifyAllObservers(){
-        for(Observable obs : observers){
+        for(TimerObserver obs : observers){
+            System.out.println("Message State Observer added: " + obs.getClass());
             obs.update();
         }
     }

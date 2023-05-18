@@ -25,7 +25,21 @@ public class MainMenuWindow {
 
     JList<String> list;
 
-    public MainMenuWindow() {
+    private static MainMenuWindow singleton;
+
+    public static MainMenuWindow getSingleton(){
+        if (singleton != null) {
+            return singleton;
+        }
+        singleton = new MainMenuWindow();
+        return singleton;
+    }
+
+    public static void closeWindow(){
+        singleton = null;
+    }
+
+    private MainMenuWindow() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int screenWidth = screenSize.width / 4;
         int screenHeight = screenSize.height / 3;
@@ -34,7 +48,7 @@ public class MainMenuWindow {
         int windowX = (screenSize.width - screenWidth) / 2;
         int windowY = (screenSize.height - screenHeight) / 2;
 
-        frame = new JFrame("Chat Client");
+        frame = new JFrame("Main Menu");
         frame.setSize(screenWidth, screenHeight);
         frame.setLocation(windowX, windowY);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -64,14 +78,12 @@ public class MainMenuWindow {
         MessageHandler.getSingleton().queueCommand(peers);
         while(!ReportHandler.getSingleton().hasReports()){}
         GetPeersReport report = (GetPeersReport) ReportHandler.getSingleton().getNextReport();
-        System.out.println("MainMenuReport: " + report.toString());
         List<String> peersList = report.getPeers();
 
         String[] pList = new String[peersList.size()];
         for(int i = 0; i < pList.length; i++){
             pList[i] = peersList.get(i);
         }
-        System.out.println("Filled Peers");
         list = new JList<>(pList);
         JScrollPane listScrollPane = new JScrollPane(list);
         list.addListSelectionListener(new ListSelectionListener() {
@@ -81,6 +93,7 @@ public class MainMenuWindow {
                     // Get the selected item from the list
                     String selected = list.getSelectedValue();
                     if (selected != null) {
+                        ClientInformation.getSingleton().setLatestRecipient(selected);
                         getChats(selected);
                     }
                 }

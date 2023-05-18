@@ -25,6 +25,5 @@ public class CommandGetChatForUsers implements Command{
         RequestGetChats request = new RequestGetChats(username1, username2);
         ResponseGetChats response = repository.getChatsForUsers(request);
         ReportHandler.getSingleton().addNewReport(new ChatForUsersReport(response.getSuccess(), response.getDescription(), response.getChats()));
-        System.out.println("Response from server" + response.getClass());
     }
 }

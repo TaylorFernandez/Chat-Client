@@ -2,6 +2,8 @@ package com.Taylor.ChatProject.datasource.communications.Repository;
 
 import com.Taylor.ChatProject.datasource.communications.Request.RequestGetChats;
 import com.Taylor.ChatProject.datasource.communications.Request.RequestGetPeers;
+import com.Taylor.ChatProject.datasource.communications.Request.RequestSendNewChat;
+import com.Taylor.ChatProject.datasource.communications.Response.BasicResponse;
 import com.Taylor.ChatProject.datasource.communications.Response.ResponseGetChats;
 import com.Taylor.ChatProject.datasource.communications.Response.ResponseGetPeers;
 import com.Taylor.ChatProject.datasource.model.report.ChatForUsersReport;
@@ -52,6 +54,11 @@ public class ChatRepository {
     public ResponseGetPeers getPeers(RequestGetPeers request){
         String url = baseUrl + "/chat/getPeers";
         return performPostRequest(url, request, ResponseGetPeers.class);
+    }
+
+    public BasicResponse sendNewChat(RequestSendNewChat request){
+        String url = baseUrl + "/chat/newChat";
+        return performPostRequest(url, request, BasicResponse.class);
     }
 
 
