@@ -1,5 +1,6 @@
 package com.Taylor.ChatProject.datasource.presentation;
 
+import com.Taylor.ChatProject.datasource.ClientInformation;
 import com.Taylor.ChatProject.datasource.model.Command.CommandSendLoginInformation;
 import com.Taylor.ChatProject.datasource.model.MessageHandler;
 import com.Taylor.ChatProject.datasource.model.Observer.ApplicationStateObserver;
@@ -28,9 +29,18 @@ public class LoginWindow {
         frame.setSize(screenWidth, screenHeight);
         frame.setLocation(windowX, windowY);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new GridLayout(3, 1));
+        frame.setLayout(new GridLayout(4, 1));
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER)); // Panel for centering the button
+        JPanel ipConfigPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JButton configButton = new JButton("Configure Networking");
+        configButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                openConfigWindow();
+            }
+        });
+        ipConfigPanel.add(configButton);
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton login = new JButton("Login");
         login.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -49,18 +59,18 @@ public class LoginWindow {
         frame.add(Username);
         frame.add(PasswordLabel);
         frame.add(Password);
-        frame.add(buttonPanel); // Add the button panel to the frame
+        frame.add(ipConfigPanel);
+        frame.add(buttonPanel);
 
         frame.setVisible(true);
     }
 
-    public void isVisible(boolean bool){
+    public void isVisible(boolean bool) {
         frame.setVisible(bool);
     }
 
-    public static void showFailurePopup(){
-        int choice = JOptionPane.showConfirmDialog(null ,
-                "Login Failed. Please try again!", "Login failed",
+    public static void showFailurePopup() {
+        JOptionPane.showConfirmDialog(null, "Login Failed. Please try again!", "Login failed",
                 JOptionPane.DEFAULT_OPTION);
     }
 
@@ -73,5 +83,51 @@ public class LoginWindow {
             MessageHandler.getSingleton().queueCommand(info);
             ApplicationStateObserver.getSingleton().setState(new LoginWaitingState());
         }
+    }
+
+    public void openConfigWindow() {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+
+        // Calculate the x and y coordinates to center the window
+        int windowX = (screenSize.width - 300) / 2;
+        int windowY = (screenSize.height - 150) / 2;
+
+
+        JFrame configFrame = new JFrame("Configuration");
+        configFrame.setSize(300, 150);
+        configFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        configFrame.setLayout(new GridLayout(3, 2));
+        configFrame.setLocation(windowX, windowY);
+
+        JLabel ipLabel = new JLabel("IP Address: ");
+        JTextField ipField = new JTextField();
+
+        JLabel portLabel = new JLabel("Port: ");
+        JTextField portField = new JTextField();
+
+        JButton saveButton = new JButton("Save");
+        saveButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Save the IP address and port
+                String ipAddress = ipField.getText();
+                int port = Integer.parseInt(portField.getText());
+
+                //"http://localhost:8080/"
+                String newURL = "http://" + ipAddress + ":" + port +'/';
+                System.out.println(newURL);
+                ClientInformation.getSingleton().setServerAddress(newURL);
+
+                configFrame.dispose(); // Close the configuration window
+            }
+        });
+
+        configFrame.add(ipLabel);
+        configFrame.add(ipField);
+        configFrame.add(portLabel);
+        configFrame.add(portField);
+        configFrame.add(saveButton);
+
+        configFrame.setVisible(true);
     }
 }

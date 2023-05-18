@@ -7,7 +7,11 @@ public class ClientInformation {
 
     private String latestRecipient;
 
-    private ClientInformation(){}
+    private String serverAddress;
+
+    private ClientInformation(){
+        serverAddress = "http://localhost:8080/";
+    }
 
     public static ClientInformation getSingleton(){
         if(singleton != null){
@@ -15,6 +19,14 @@ public class ClientInformation {
         }
         singleton = new ClientInformation();
         return singleton;
+    }
+
+    public String getServerAddress(){
+        return serverAddress;
+    }
+
+    public void setServerAddress(String serverAddress){
+        this.serverAddress = serverAddress;
     }
 
     public String getUsername(){

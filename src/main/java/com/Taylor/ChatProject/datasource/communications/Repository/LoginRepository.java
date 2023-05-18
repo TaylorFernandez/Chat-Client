@@ -1,5 +1,6 @@
 package com.Taylor.ChatProject.datasource.communications.Repository;
 
+import com.Taylor.ChatProject.datasource.ClientInformation;
 import com.Taylor.ChatProject.datasource.communications.Request.RequestGetLoginStatus;
 import com.Taylor.ChatProject.datasource.communications.Response.BasicResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +29,7 @@ public class LoginRepository {
                 .setConnectTimeout(Duration.ofSeconds(10))
                 .setReadTimeout(Duration.ofSeconds(10));
         this.restTemplate = restTemplateBuilder.build();
-        this.baseUrl = "http://localhost:8080/";
+        this.baseUrl = ClientInformation.getSingleton().getServerAddress();
 
     }
 

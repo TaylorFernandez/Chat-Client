@@ -1,5 +1,6 @@
 package com.Taylor.ChatProject.datasource.communications.Repository;
 
+import com.Taylor.ChatProject.datasource.ClientInformation;
 import com.Taylor.ChatProject.datasource.communications.Request.RequestGetChats;
 import com.Taylor.ChatProject.datasource.communications.Request.RequestGetPeers;
 import com.Taylor.ChatProject.datasource.communications.Request.RequestSendNewChat;
@@ -35,7 +36,7 @@ public class ChatRepository {
                 .setConnectTimeout(Duration.ofSeconds(10))
                 .setReadTimeout(Duration.ofSeconds(10));
         this.restTemplate = restTemplateBuilder.build();
-        this.baseUrl = "http://localhost:8080/";
+        this.baseUrl = ClientInformation.getSingleton().getServerAddress();
     }
 
     public static ChatRepository getSingleton(){
