@@ -6,6 +6,9 @@ import com.Taylor.ChatProject.datasource.model.Command.CommandCreateNewChat;
 import com.Taylor.ChatProject.datasource.model.Command.CommandGetChatForUsers;
 import com.Taylor.ChatProject.datasource.model.Command.CommandGetPeers;
 import com.Taylor.ChatProject.datasource.model.MessageHandler;
+import com.Taylor.ChatProject.datasource.model.Observer.ChatListObserver;
+import com.Taylor.ChatProject.datasource.model.Observer.Observer;
+import com.Taylor.ChatProject.datasource.model.Observer.UpdateChatsTimer;
 import com.Taylor.ChatProject.datasource.model.report.GetPeersReport;
 import com.Taylor.ChatProject.datasource.model.report.ReportHandler;
 import org.apache.logging.log4j.message.Message;
@@ -18,13 +21,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public class MainMenuWindow {
+public class MainMenuWindow extends Observer {
 
     JTextField Username;
     JFrame frame;
     JTextField Password;
 
     JList<String> list;
+
+    UpdateChatsTimer timer;
 
     private static MainMenuWindow singleton;
 
@@ -41,6 +46,9 @@ public class MainMenuWindow {
     }
 
     private MainMenuWindow() {
+        timer = new UpdateChatsTimer();
+        ChatListObserver.getSingleton().addObserver(this);
+
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int screenWidth = screenSize.width / 4;
         int screenHeight = screenSize.height / 3;
@@ -75,17 +83,9 @@ public class MainMenuWindow {
             }
         });
         buttonPanel.add(settings);
-        CommandGetPeers peers = new CommandGetPeers();
-        MessageHandler.getSingleton().queueCommand(peers);
-        while(!ReportHandler.getSingleton().hasReports()){}
-        GetPeersReport report = (GetPeersReport) ReportHandler.getSingleton().getNextReport();
-        List<String> peersList = report.getPeers();
 
-        String[] pList = new String[peersList.size()];
-        for(int i = 0; i < pList.length; i++){
-            pList[i] = peersList.get(i);
-        }
-        list = new JList<>(pList);
+        list = new JList<>();
+        refillList();
         JScrollPane listScrollPane = new JScrollPane(list);
         list.addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -110,6 +110,7 @@ public class MainMenuWindow {
         frame.add(mainMenu);
 
         frame.setVisible(false);
+        timer.startExecution();
     }
 
     public void isVisible(boolean bool) {
@@ -121,12 +122,11 @@ public class MainMenuWindow {
         MessageHandler.getSingleton().queueCommand(command);
         while(!ReportHandler.getSingleton().hasReports()){}
         ChattingMenu menu = new ChattingMenu();
+        System.out.println("fetching chat list");
     }
 
     public void doAction(ActionEvent e) {
-        if (e.getActionCommand().equals("Start Networking")) {
-
-        } else if (e.getActionCommand().equals("New Chat")) {
+        if (e.getActionCommand().equals("New Chat")) {
             openNewChatWindow();
         } else if (e.getActionCommand().equals("Settings")) {
 
@@ -176,7 +176,22 @@ public class MainMenuWindow {
         configFrame.setVisible(true);
     }
 
-    public void createNewChat(String username){
-        System.out.println(username);
+    public void refillList(){
+        CommandGetPeers peers = new CommandGetPeers();
+        MessageHandler.getSingleton().queueCommand(peers);
+        while(!ReportHandler.getSingleton().hasReports()){}
+        GetPeersReport report = (GetPeersReport) ReportHandler.getSingleton().getNextReport();
+        List<String> peersList = report.getPeers();
+
+        String[] pList = new String[peersList.size()];
+        for(int i = 0; i < pList.length; i++){
+            pList[i] = peersList.get(i);
+        }
+        list.setListData(pList);
+    }
+
+    @Override
+    public void update() {
+        refillList();
     }
 }

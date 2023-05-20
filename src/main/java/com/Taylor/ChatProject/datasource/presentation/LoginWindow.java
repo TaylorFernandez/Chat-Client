@@ -92,6 +92,7 @@ public class LoginWindow {
             System.out.println("Logging in");
             CommandSendLoginInformation info = new CommandSendLoginInformation(usernameText, passwordText);
             MessageHandler.getSingleton().queueCommand(info);
+            ApplicationStateObserver.getSingleton().setState(new LoginWaitingState());
         }
     }
 
