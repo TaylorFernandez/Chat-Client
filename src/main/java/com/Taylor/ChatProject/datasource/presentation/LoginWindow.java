@@ -1,10 +1,13 @@
 package com.Taylor.ChatProject.datasource.presentation;
 
 import com.Taylor.ChatProject.datasource.ClientInformation;
+import com.Taylor.ChatProject.datasource.model.Command.CommandCreateNewUser;
 import com.Taylor.ChatProject.datasource.model.Command.CommandSendLoginInformation;
 import com.Taylor.ChatProject.datasource.model.MessageHandler;
 import com.Taylor.ChatProject.datasource.model.Observer.ApplicationStateObserver;
 import com.Taylor.ChatProject.datasource.model.State.LoginWaitingState;
+import com.Taylor.ChatProject.datasource.model.report.CreateNewUserReport;
+import com.Taylor.ChatProject.datasource.model.report.ReportHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,6 +35,8 @@ public class LoginWindow {
         frame.setLayout(new GridLayout(4, 1));
 
         JPanel ipConfigPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+
         JButton configButton = new JButton("Configure Networking");
         configButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -48,6 +53,12 @@ public class LoginWindow {
             }
         });
         buttonPanel.add(login);
+
+        JButton newUser = new JButton("New User");
+        newUser.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){openNewUserWindow();}
+        });
+        buttonPanel.add(newUser);
 
         JLabel UsernameLabel = new JLabel("Username: ");
         Username = new JTextField();
@@ -81,8 +92,56 @@ public class LoginWindow {
             System.out.println("Logging in");
             CommandSendLoginInformation info = new CommandSendLoginInformation(usernameText, passwordText);
             MessageHandler.getSingleton().queueCommand(info);
-            ApplicationStateObserver.getSingleton().setState(new LoginWaitingState());
         }
+    }
+
+    public void openNewUserWindow(){
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+        // Calculate the x and y coordinates to center the window
+        int windowX = (screenSize.width - 300) / 2;
+        int windowY = (screenSize.height - 150) / 2;
+
+        JFrame configFrame = new JFrame("New User");
+        configFrame.setSize(300, 150);
+        configFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        configFrame.setLayout(new GridLayout(3, 2));
+        configFrame.setLocation(windowX, windowY);
+
+        JLabel uName = new JLabel("UserName: ");
+        JTextField username = new JTextField();
+
+        JLabel pwd = new JLabel("Password: ");
+        JTextField password = new JTextField();
+
+        JButton saveButton = new JButton("Save");
+        saveButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                String uName = username.getText();
+                String pwd = password.getText();
+
+                //TODO: add code to notify server of new user
+                CommandCreateNewUser cmd = new CommandCreateNewUser(uName, pwd);
+                MessageHandler.getSingleton().queueCommand(cmd);
+                while(!ReportHandler.getSingleton().hasReports()){}
+                CreateNewUserReport r = (CreateNewUserReport) ReportHandler.getSingleton().getNextReport();
+                System.out.println("New User Report: " + r.getSuccess());
+                ReportHandler.getSingleton().addNewReport(r);
+                ClientInformation.getSingleton().setUsername(uName);
+                ApplicationStateObserver.getSingleton().setState(new LoginWaitingState());
+
+                configFrame.dispose(); // Close the configuration window
+            }
+        });
+
+        configFrame.add(uName);
+        configFrame.add(username);
+        configFrame.add(pwd);
+        configFrame.add(password);
+        configFrame.add(saveButton);
+
+        configFrame.setVisible(true);
     }
 
     public void openConfigWindow() {

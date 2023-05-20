@@ -21,6 +21,7 @@ public class ReportHandler{
 
     public void addNewReport(Report r) {
         reportQueue.add(r);
+
     }
 
     public Report getNextReport()

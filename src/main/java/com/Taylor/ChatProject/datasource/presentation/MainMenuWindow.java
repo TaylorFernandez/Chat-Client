@@ -2,6 +2,7 @@ package com.Taylor.ChatProject.datasource.presentation;
 
 import com.Taylor.ChatProject.datasource.ClientInformation;
 import com.Taylor.ChatProject.datasource.model.Command.Command;
+import com.Taylor.ChatProject.datasource.model.Command.CommandCreateNewChat;
 import com.Taylor.ChatProject.datasource.model.Command.CommandGetChatForUsers;
 import com.Taylor.ChatProject.datasource.model.Command.CommandGetPeers;
 import com.Taylor.ChatProject.datasource.model.MessageHandler;
@@ -120,16 +121,62 @@ public class MainMenuWindow {
         MessageHandler.getSingleton().queueCommand(command);
         while(!ReportHandler.getSingleton().hasReports()){}
         ChattingMenu menu = new ChattingMenu();
-
     }
 
     public void doAction(ActionEvent e) {
         if (e.getActionCommand().equals("Start Networking")) {
 
         } else if (e.getActionCommand().equals("New Chat")) {
-
+            openNewChatWindow();
         } else if (e.getActionCommand().equals("Settings")) {
 
         }
+    }
+
+    public void openNewChatWindow(){
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+        int windowX = (screenSize.width - 300) / 2;
+        int windowY = (screenSize.height - 150) / 2;
+
+
+        JFrame configFrame = new JFrame("New Chat");
+        configFrame.setSize(300, 150);
+        configFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        configFrame.setLayout(new GridLayout(3, 2));
+        configFrame.setLocation(windowX, windowY);
+
+        JLabel uName = new JLabel("Recipient User Name: ");
+        JTextField username = new JTextField();
+
+        JButton createButton = new JButton("Create");
+        createButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Save the IP address and port
+                String usernameText = username.getText();
+
+                //Add Code for creating new chat;
+                CommandCreateNewChat cmd = new CommandCreateNewChat(usernameText);
+                MessageHandler.getSingleton().queueCommand(cmd);
+                ClientInformation.getSingleton().setLatestRecipient(usernameText);
+                while(!ReportHandler.getSingleton().hasReports()){}
+                if(ReportHandler.getSingleton().getNextReport().getSuccess()) {
+                    getChats(usernameText);
+                }
+
+                configFrame.dispose(); // Close the configuration window
+            }
+        });
+
+
+        configFrame.add(uName);
+        configFrame.add(username);
+        configFrame.add(createButton);
+
+        configFrame.setVisible(true);
+    }
+
+    public void createNewChat(String username){
+        System.out.println(username);
     }
 }

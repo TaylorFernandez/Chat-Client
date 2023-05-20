@@ -1,6 +1,7 @@
 package com.Taylor.ChatProject.datasource.communications.Repository;
 
 import com.Taylor.ChatProject.datasource.ClientInformation;
+import com.Taylor.ChatProject.datasource.communications.Request.RequestCreateNewUser;
 import com.Taylor.ChatProject.datasource.communications.Request.RequestGetLoginStatus;
 import com.Taylor.ChatProject.datasource.communications.Response.BasicResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,6 +44,11 @@ public class LoginRepository {
 
     public BasicResponse validateLoginInformation(RequestGetLoginStatus request){
         String url = baseUrl + "/login";
+        return performPostRequest(url, request, BasicResponse.class);
+    }
+
+    public BasicResponse createNewUser(RequestCreateNewUser request){
+        String url = baseUrl + "/login/newUser";
         return performPostRequest(url, request, BasicResponse.class);
     }
 

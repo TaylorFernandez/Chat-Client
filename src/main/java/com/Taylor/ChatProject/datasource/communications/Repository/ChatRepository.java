@@ -1,6 +1,7 @@
 package com.Taylor.ChatProject.datasource.communications.Repository;
 
 import com.Taylor.ChatProject.datasource.ClientInformation;
+import com.Taylor.ChatProject.datasource.communications.Request.RequestCreateNewChat;
 import com.Taylor.ChatProject.datasource.communications.Request.RequestGetChats;
 import com.Taylor.ChatProject.datasource.communications.Request.RequestGetPeers;
 import com.Taylor.ChatProject.datasource.communications.Request.RequestSendNewChat;
@@ -59,6 +60,11 @@ public class ChatRepository {
 
     public BasicResponse sendNewChat(RequestSendNewChat request){
         String url = baseUrl + "/chat/newChat";
+        return performPostRequest(url, request, BasicResponse.class);
+    }
+
+    public BasicResponse createNewChat(RequestCreateNewChat request){
+        String url = baseUrl + "/chat/createNewChat";
         return performPostRequest(url, request, BasicResponse.class);
     }
 
